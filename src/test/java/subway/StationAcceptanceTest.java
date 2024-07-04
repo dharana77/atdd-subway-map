@@ -138,10 +138,12 @@ public class StationAcceptanceTest {
           .then().log().all()
           .extract();
 
+        //요청 결과 응답 코드가 일치하는지 확인한다.
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(showResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
 
+        // 지하철 역 조회 결과에 삭제이후 이름이 포함되어 있지 않고 크기가 0인지 확인한다.
         List<String> stationNames = showResponse.jsonPath().getList("name", String.class);
         assertThat(stationNames).doesNotContain("종합운동장");
         assertThat(stationNames).size().isEqualTo(0);
