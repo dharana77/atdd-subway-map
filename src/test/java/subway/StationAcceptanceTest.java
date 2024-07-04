@@ -110,4 +110,40 @@ public class StationAcceptanceTest {
      */
     // TODO: 지하철역 제거 인수 테스트 메서드 생성
 
+
+    @DisplayName("지하철역 생성 후 지하철역을 삭제한다.")
+    @Test
+    public void testDeleteStation(){
+        //given
+        ExtractableResponse<Response> createResponse =
+          RestAssured.given().log().all()
+            .body(new StationRequest("종합운동장"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/stations")
+            .then().log().all()
+            .extract();
+
+
+        //when
+        ExtractableResponse<Response> deleteResponse = RestAssured.given().log().all()
+          .contentType(MediaType.APPLICATION_JSON_VALUE)
+          .when().delete("/stations/1")
+          .then().log().all()
+          .extract();
+
+        //then
+        ExtractableResponse<Response> showResponse = RestAssured.given().log().all()
+          .contentType(MediaType.APPLICATION_JSON_VALUE)
+          .when().get("/stations")
+          .then().log().all()
+          .extract();
+
+        assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(showResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        List<String> stationNames = showResponse.jsonPath().getList("name", String.class);
+        assertThat(stationNames).doesNotContain("종합운동장");
+        assertThat(stationNames).size().isEqualTo(0);
+    }
 }
