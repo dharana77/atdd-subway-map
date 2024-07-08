@@ -68,4 +68,80 @@ public class LineAcceptanceTest {
     assertThat(createLineResponse.body().jsonPath().getLong("distance")).isEqualTo(10);
 
   }
+
+  @DisplayName("지하철 노선을 생성하여 목록을 조회한다.")
+  @Test
+  public void testShowLines(){
+    //given
+    ExtractableResponse<Response> createStationResponse = RestAssured.given().log().all()
+      .body(new StationRequest("종합운동장"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createStationResponse2 = RestAssured.given().log().all()
+      .body(new StationRequest("잠실새내"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createStationResponse3 = RestAssured.given().log().all()
+      .body(new StationRequest("잠실"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createStationResponse4 = RestAssured.given().log().all()
+      .body(new StationRequest("선릉"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createLineResponse = RestAssured.given().log().all()
+      .body(new LineCreateRequest("2호선", "green", 1L, 2L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createLineResponse2 = RestAssured.given().log().all()
+      .body(new LineCreateRequest("2호선", "green", 2L, 3L, 50))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createLineResponse3 = RestAssured.given().log().all()
+      .body(new LineCreateRequest("2호선", "green", 3L, 4L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines")
+      .then().log().all()
+      .extract();
+
+
+    //when
+    ExtractableResponse<Response> showResponse = RestAssured.given().log().all()
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().get("/lines")
+      .then().log().all()
+      .extract();
+
+    //then
+    assertThat(showResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+    assertThat(showResponse.body().jsonPath().getList("name", String.class)).size().isEqualTo(1);
+    assertThat(showResponse.body().jsonPath().getString("name")).isEqualTo("2호선");
+    assertThat(showResponse.body().jsonPath().getString("color")).isEqualTo("green");
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(4);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(0).getId()).isEqualTo(1L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(1).getId()).isEqualTo(2L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(2).getId()).isEqualTo(3L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(3).getId()).isEqualTo(4L);
+
+    assertThat(showResponse.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
+    assertThat(showResponse.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
+  }
 }
