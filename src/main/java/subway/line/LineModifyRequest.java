@@ -1,11 +1,16 @@
-package line;
+package subway.line;
 
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class LineModifyRequest {
   String name;
 
   String color;
+
+  public LineModifyRequest(){
+  }
+
+  public LineModifyRequest(String name, String color) {
+    this.name = name;
+    this.color = color;
+  }
 }
