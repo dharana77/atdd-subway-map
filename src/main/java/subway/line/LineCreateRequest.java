@@ -1,9 +1,7 @@
 package subway.line;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 public class LineCreateRequest {
 
   private String name;
@@ -25,5 +23,25 @@ public class LineCreateRequest {
 
   public Line toLine() {
     return new Line(null, name, upStationId, downStationId, distance);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getColor() {
+    return color;
+  }
+
+  public Long getUpStationId() {
+    return upStationId;
+  }
+
+  public Long getDownStationId() {
+    return downStationId;
+  }
+
+  public int getDistance() {
+    return distance;
   }
 }
