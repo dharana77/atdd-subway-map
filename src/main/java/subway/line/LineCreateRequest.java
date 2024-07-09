@@ -1,7 +1,9 @@
 package line;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class LineCreateRequest {
 
@@ -10,4 +12,8 @@ public class LineCreateRequest {
   private Long upStationId;
   private Long downStationId;
   private int distance;
+
+  public Line toLine() {
+    return new Line(null, name, upStationId, downStationId, distance);
+  }
 }
