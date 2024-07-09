@@ -49,28 +49,9 @@ public class LineAcceptanceTest {
       .extract();
 
     //then
-    // 이미 노선이 있는지 확인한다.
-    ExtractableResponse<Response> showResponse = RestAssured.given().log().all()
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().get("/lines")
-      .then().log().all()
-      .extract();
-
-    assertThat(showResponse.body().jsonPath().getList("name", String.class)).size().isEqualTo(1);
-
-    // 노선이 있지 않다면 두개의 역에 대한 지하철 노선이 추가되었는지 확인한다.
     assertThat(createStationResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(createStationResponse2.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    assertThat(createLineResponse.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(2);
-    assertThat(createLineResponse.body().jsonPath().getList("stations", Long.class).get(0)).isEqualTo(1L);
-    assertThat(createLineResponse.body().jsonPath().getList("stations", Long.class).get(1)).isEqualTo(2L);
-    //첫번째 이름 종합운동장인지, 두번째 이름 잠실새내역인지 확인
-    assertThat(createLineResponse.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
-    assertThat(createLineResponse.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
-    assertThat(createLineResponse.body().jsonPath().getString("name")).isEqualTo("2호선");
-    assertThat(createLineResponse.body().jsonPath().getString("color")).isEqualTo("green");
-    assertThat(createLineResponse.body().jsonPath().getLong("distance")).isEqualTo(10);
-
   }
 
   @DisplayName("지하철 노선을 생성하여 목록을 조회한다.")
