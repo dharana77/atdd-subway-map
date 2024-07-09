@@ -1,6 +1,7 @@
 package subway.line;
 
 import lombok.Getter;
+import subway.Station;
 
 public class LineCreateRequest {
 
@@ -21,8 +22,8 @@ public class LineCreateRequest {
     this.distance = distance;
   }
 
-  public Line toLine() {
-    return new Line(null, name, upStationId, downStationId, distance);
+  public Line toLine(Station upStation, Station downStation) {
+    return new Line(null, name, upStation, downStation, distance);
   }
 
   public String getName() {
