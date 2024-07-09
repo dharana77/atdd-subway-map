@@ -194,4 +194,44 @@ public class LineAcceptanceTest {
   }
 
 
+  @DisplayName("지하철 노선을 수정한다.")
+  @Test
+  public void testModifyLine(){
+    //given
+    ExtractableResponse<Response> createStation1Response = RestAssured.given().log().all()
+      .body(new StationRequest("종합운동장"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createStation2Response = RestAssured.given().log().all()
+      .body(new StationRequest("잠실새내"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createLineResponse = RestAssured.given().log().all()
+      .body(new LineCreateRequest("2호선", "green", 1L, 2L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines")
+      .then().log().all()
+      .extract();
+
+    //when
+    ExtractableResponse lineModifyResponse = RestAssured.given().log().all()
+      .body(new LineModifyRequest("새로운 2호선", "blue"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().put("/lines/1")
+      .then().log().all()
+      .extract();
+
+    //then
+    assertThat(lineModifyResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+    assertThat(createStation1Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(createStation2Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+  }
 }
