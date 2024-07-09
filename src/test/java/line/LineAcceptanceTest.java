@@ -144,4 +144,52 @@ public class LineAcceptanceTest {
     assertThat(showResponse.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
     assertThat(showResponse.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
   }
+
+
+  @DisplayName("지하철 특정 노선의 정보를 조회한다.")
+  @Test
+  public void testShowLineInfo(){
+
+    //given
+    ExtractableResponse<Response> createStationResponse = RestAssured.given().log().all()
+      .body(new StationRequest("종합운동장"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createStationResponse2 = RestAssured.given().log().all()
+      .body(new StationRequest("잠실새내"))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/stations")
+      .then().log().all()
+      .extract();
+
+    ExtractableResponse<Response> createLineResponse = RestAssured.given().log().all()
+      .body(new LineCreateRequest("2호선", "green", 1L, 2L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines")
+      .then().log().all()
+      .extract();
+
+    //when
+    ExtractableResponse lineOneInfo = RestAssured.given().log().all()
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().get("/lines/1")
+      .then().log().all()
+      .extract();
+
+    //then
+    assertThat(lineOneInfo.statusCode()).isEqualTo(HttpStatus.OK.value());
+    assertThat(lineOneInfo.body().jsonPath().getString("name")).isEqualTo("2호선");
+    assertThat(lineOneInfo.body().jsonPath().getString("color")).isEqualTo("green");
+    assertThat(lineOneInfo.body().jsonPath().getLong("distance")).isEqualTo(10);
+    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(2);
+    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class).get(0)).isEqualTo(1L);
+    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class).get(1)).isEqualTo(2L);
+    assertThat(lineOneInfo.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
+    assertThat(lineOneInfo.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
+  }
+
+
 }
