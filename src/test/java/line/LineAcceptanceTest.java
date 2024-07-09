@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import subway.StationRequest;
+import subway.line.LineCreateRequest;
+import subway.line.LineModifyRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,10 +140,10 @@ public class LineAcceptanceTest {
     assertThat(showResponse.body().jsonPath().getString("name")).isEqualTo("2호선");
     assertThat(showResponse.body().jsonPath().getString("color")).isEqualTo("green");
     assertThat(showResponse.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(4);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(0).getId()).isEqualTo(1L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(1).getId()).isEqualTo(2L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(2).getId()).isEqualTo(3L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(3).getId()).isEqualTo(4L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(0)).isEqualTo(1L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(1)).isEqualTo(2L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(2)).isEqualTo(3L);
+    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(3)).isEqualTo(4L);
 
     assertThat(showResponse.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
     assertThat(showResponse.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
