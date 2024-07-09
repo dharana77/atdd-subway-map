@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class LineAcceptanceTest {
 
-  @DisplayName("지하철 노선을 생성하여 새로운 노선을 추가한다.")
+  @DisplayName("지하철의 새로운 노선을 추가한다.")
   @Test
   public void testCreateLine(){
     //도메인 제약 테스트를 추가하기 위해 노선의 조건에서 색상이 중복되지 않고 거리가 100이하여야 한다고 가정한다
@@ -54,7 +54,7 @@ public class LineAcceptanceTest {
     assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
   }
 
-  @DisplayName("지하철 노선을 생성하여 목록을 조회한다.")
+  @DisplayName("지하철 노선 목록을 조회한다.")
   @Test
   public void testShowLines(){
     //given
