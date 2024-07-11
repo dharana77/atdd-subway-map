@@ -23,7 +23,7 @@ public class LineCreateRequest {
   }
 
   public Line toLine(Station upStation, Station downStation) {
-    return new Line(null, name, upStation, downStation, distance);
+    return new Line(null, name, color, upStation, downStation, distance);
   }
 
   public String getName() {

@@ -1,8 +1,10 @@
 package subway.line;
 
 import subway.Station;
+import subway.StationResponse;
 
 import java.util.List;
+import java.util.Set;
 
 public class LineResponse {
 
@@ -36,7 +38,11 @@ public class LineResponse {
     return color;
   }
 
-  public List<Station> getStations() {
+  public List<Station> getStations(){
     return stations;
+  }
+
+  public static LineResponse from(Line line){
+    return new LineResponse(line.getId(), line.getName(), line.getColor(), List.of(line.getUpStation(), line.getDownStation()));
   }
 }

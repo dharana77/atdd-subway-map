@@ -22,11 +22,11 @@ public class Line {
   private String color;
 
   @OneToOne
-  @JoinColumn(name = "upstation_id")
+  @JoinColumn(name = "up_station_id")
   private Station upStation;
 
   @OneToOne
-  @JoinColumn(name = "downstation_id")
+  @JoinColumn(name = "down_station_id")
   private Station downStation;
 
   private int distance;
@@ -34,9 +34,10 @@ public class Line {
   public Line() {
   }
 
-  public Line(Long id, String name, Station upStation, Station downStation, int distance) {
+  public Line(Long id, String name, String color, Station upStation, Station downStation, int distance) {
     this.id = id;
     this.name = name;
+    this.color = color;
     this.upStation = upStation;
     this.downStation = downStation;
     this.distance = distance;
