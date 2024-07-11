@@ -115,17 +115,22 @@ public class LineAcceptanceTest {
 
     //then
     assertThat(showResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-    assertThat(showResponse.body().jsonPath().getList("name", String.class)).size().isEqualTo(1);
-    assertThat(showResponse.body().jsonPath().getString("name")).isEqualTo("2호선");
-    assertThat(showResponse.body().jsonPath().getString("color")).isEqualTo("green");
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(4);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(0)).isEqualTo(1L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(1)).isEqualTo(2L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(2)).isEqualTo(3L);
-    assertThat(showResponse.body().jsonPath().getList("stations", Long.class).get(3)).isEqualTo(4L);
+    assertThat(showResponse.body().jsonPath().getList("name", String.class)).size().isEqualTo(3);
+    assertThat(showResponse.body().jsonPath().getList("stations").size()).isEqualTo(3);
+    assertThat(showResponse.body().jsonPath().getLong("stations[0].id[0]")).isEqualTo(1L);
+    assertThat(showResponse.body().jsonPath().getLong("stations[0].id[1]")).isEqualTo(2L);
+    assertThat(showResponse.body().jsonPath().getLong("stations[1].id[0]")).isEqualTo(2L);
+    assertThat(showResponse.body().jsonPath().getLong("stations[1].id[1]")).isEqualTo(3L);
+    assertThat(showResponse.body().jsonPath().getLong("stations[2].id[0]")).isEqualTo(3L);
+    assertThat(showResponse.body().jsonPath().getLong("stations[2].id[1]")).isEqualTo(4L);
 
-    assertThat(showResponse.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
-    assertThat(showResponse.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
+    assertThat(showResponse.body().jsonPath().getString("stations[0].name[0]")).isEqualTo("종합운동장");
+    assertThat(showResponse.body().jsonPath().getString("stations[0].name[1]")).isEqualTo("잠실새내");
+    assertThat(showResponse.body().jsonPath().getString("stations[1].name[0]")).isEqualTo("잠실새내");
+    assertThat(showResponse.body().jsonPath().getString("stations[1].name[1]")).isEqualTo("잠실");
+    assertThat(showResponse.body().jsonPath().getString("stations[2].name[0]")).isEqualTo("잠실");
+    assertThat(showResponse.body().jsonPath().getString("stations[2].name[1]")).isEqualTo("선릉");
+
   }
 
 
