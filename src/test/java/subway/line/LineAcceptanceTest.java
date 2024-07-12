@@ -256,11 +256,11 @@ public class LineAcceptanceTest {
       .extract();
 
     //then
-    assertThat(lineDeleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
     assertThat(createStation1Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     assertThat(createStation2Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(lineDeleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
   }
 
 }
