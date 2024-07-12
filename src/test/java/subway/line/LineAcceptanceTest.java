@@ -171,10 +171,9 @@ public class LineAcceptanceTest {
     assertThat(lineOneInfo.statusCode()).isEqualTo(HttpStatus.OK.value());
     assertThat(lineOneInfo.body().jsonPath().getString("name")).isEqualTo("2호선");
     assertThat(lineOneInfo.body().jsonPath().getString("color")).isEqualTo("green");
-    assertThat(lineOneInfo.body().jsonPath().getLong("distance")).isEqualTo(10);
-    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class)).size().isEqualTo(2);
-    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class).get(0)).isEqualTo(1L);
-    assertThat(lineOneInfo.body().jsonPath().getList("stations", Long.class).get(1)).isEqualTo(2L);
+    assertThat(lineOneInfo.body().jsonPath().getList("stations")).size().isEqualTo(2);
+    assertThat(lineOneInfo.body().jsonPath().getLong("stations[0].id")).isEqualTo(1L);
+    assertThat(lineOneInfo.body().jsonPath().getLong("stations[1].id")).isEqualTo(2L);
     assertThat(lineOneInfo.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
     assertThat(lineOneInfo.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
   }
