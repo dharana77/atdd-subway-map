@@ -218,6 +218,9 @@ public class LineAcceptanceTest {
     assertThat(createStation1Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     assertThat(createStation2Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+
+    assertThat(lineModifyResponse.body().jsonPath().getString("name")).isEqualTo("새로운 2호선");
+    assertThat(lineModifyResponse.body().jsonPath().getString("color")).isEqualTo("blue");
   }
 
   @DisplayName("지하철 노선을 삭제한다.")
