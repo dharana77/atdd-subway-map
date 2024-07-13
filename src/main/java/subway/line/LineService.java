@@ -23,9 +23,8 @@ public class LineService {
 
   @Transactional
   public Line createLine(LineCreateRequest lineCreateRequest) {
-    Station upStation = stationRepository.findById(lineCreateRequest.getUpStationId()).orElseThrow(RuntimeException::new);
-    Station downStation = stationRepository.findById(lineCreateRequest.getDownStationId()).orElseThrow(RuntimeException::new);
-    return lineRepository.save(lineCreateRequest.toLine(upStation, downStation));
+    StationsAtLine stationsAtLine = getStationsAtLine(lineCreateRequest.getUpStationId(), lineCreateRequest.getDownStationId());
+    return lineRepository.save(lineCreateRequest.toLine(stationsAtLine.getUpStation(), stationsAtLine.getDownStation()));
   }
 
   public List<LineResponse> getLines() {
@@ -49,5 +48,12 @@ public class LineService {
   @Transactional
   public void deleteLine(Long id){
     lineRepository.deleteById(id);
+  }
+
+  private StationsAtLine getStationsAtLine(Long upStationId, Long downStationId) {
+    Station upStation = stationRepository.findById(upStationId).orElseThrow(RuntimeException::new);
+    Station downStation = stationRepository.findById(downStationId).orElseThrow(RuntimeException::new);
+
+    return new StationsAtLine(upStation, downStation);
   }
 }
