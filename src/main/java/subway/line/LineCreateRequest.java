@@ -1,6 +1,5 @@
 package subway.line;
 
-import lombok.Getter;
 import subway.Station;
 
 public class LineCreateRequest {
