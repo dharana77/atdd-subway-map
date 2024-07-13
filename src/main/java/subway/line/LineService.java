@@ -22,10 +22,10 @@ public class LineService {
   }
 
   @Transactional
-  public void createLine(LineCreateRequest lineCreateRequest){
+  public Line createLine(LineCreateRequest lineCreateRequest){
     Station upStation = stationRepository.findById(lineCreateRequest.getUpStationId()).orElseThrow(RuntimeException::new);
     Station downStation = stationRepository.findById(lineCreateRequest.getDownStationId()).orElseThrow(RuntimeException::new);
-    lineRepository.save(lineCreateRequest.toLine(upStation, downStation));
+    return lineRepository.save(lineCreateRequest.toLine(upStation, downStation));
   }
 
   public List<LineResponse> getLines(){
