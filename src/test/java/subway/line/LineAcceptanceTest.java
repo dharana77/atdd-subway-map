@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import subway.StationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("지하철 노선 관련 기능")
 @Sql(scripts = "classpath:truncate-tables.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -116,24 +117,28 @@ public class LineAcceptanceTest {
 
     //then
     assertThat(showResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+    assertAll(
+      "지하철 노선 목록 조회 아이디 값 확인",
+      () -> assertThat(showResponse.body().jsonPath().getList("stations").size()).isEqualTo(3),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[0].id[0]")).isEqualTo(1L),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[0].id[1]")).isEqualTo(2L),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[1].id[0]")).isEqualTo(2L),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[1].id[1]")).isEqualTo(3L),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[2].id[0]")).isEqualTo(3L),
+      () -> assertThat(showResponse.body().jsonPath().getLong("stations[2].id[1]")).isEqualTo(4L)
+    );
     assertThat(showResponse.body().jsonPath().getList("name", String.class)).size().isEqualTo(3);
-    assertThat(showResponse.body().jsonPath().getList("stations").size()).isEqualTo(3);
-    assertThat(showResponse.body().jsonPath().getLong("stations[0].id[0]")).isEqualTo(1L);
-    assertThat(showResponse.body().jsonPath().getLong("stations[0].id[1]")).isEqualTo(2L);
-    assertThat(showResponse.body().jsonPath().getLong("stations[1].id[0]")).isEqualTo(2L);
-    assertThat(showResponse.body().jsonPath().getLong("stations[1].id[1]")).isEqualTo(3L);
-    assertThat(showResponse.body().jsonPath().getLong("stations[2].id[0]")).isEqualTo(3L);
-    assertThat(showResponse.body().jsonPath().getLong("stations[2].id[1]")).isEqualTo(4L);
 
-    assertThat(showResponse.body().jsonPath().getString("stations[0].name[0]")).isEqualTo("종합운동장");
-    assertThat(showResponse.body().jsonPath().getString("stations[0].name[1]")).isEqualTo("잠실새내");
-    assertThat(showResponse.body().jsonPath().getString("stations[1].name[0]")).isEqualTo("잠실새내");
-    assertThat(showResponse.body().jsonPath().getString("stations[1].name[1]")).isEqualTo("잠실");
-    assertThat(showResponse.body().jsonPath().getString("stations[2].name[0]")).isEqualTo("잠실");
-    assertThat(showResponse.body().jsonPath().getString("stations[2].name[1]")).isEqualTo("선릉");
-
+    assertAll(
+      "지하철 노선 목록 조회 이름 값 확인",
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[0].name[0]")).isEqualTo("종합운동장"),
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[0].name[1]")).isEqualTo("잠실새내"),
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[1].name[0]")).isEqualTo("잠실새내"),
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[1].name[1]")).isEqualTo("잠실"),
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[2].name[0]")).isEqualTo("잠실"),
+      () -> assertThat(showResponse.body().jsonPath().getString("stations[2].name[1]")).isEqualTo("선릉")
+    );
   }
-
 
   @DisplayName("지하철 특정 노선의 정보를 조회한다.")
   @Test
@@ -170,15 +175,17 @@ public class LineAcceptanceTest {
 
     //then
     assertThat(lineOneInfo.statusCode()).isEqualTo(HttpStatus.OK.value());
-    assertThat(lineOneInfo.body().jsonPath().getString("name")).isEqualTo("2호선");
-    assertThat(lineOneInfo.body().jsonPath().getString("color")).isEqualTo("green");
-    assertThat(lineOneInfo.body().jsonPath().getList("stations")).size().isEqualTo(2);
-    assertThat(lineOneInfo.body().jsonPath().getLong("stations[0].id")).isEqualTo(1L);
-    assertThat(lineOneInfo.body().jsonPath().getLong("stations[1].id")).isEqualTo(2L);
-    assertThat(lineOneInfo.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장");
-    assertThat(lineOneInfo.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내");
+    assertAll(
+      "지하철 노선 정보 확인",
+      () -> assertThat(lineOneInfo.body().jsonPath().getString("name")).isEqualTo("2호선"),
+      () -> assertThat(lineOneInfo.body().jsonPath().getString("color")).isEqualTo("green"),
+      () -> assertThat(lineOneInfo.body().jsonPath().getList("stations")).size().isEqualTo(2),
+      () -> assertThat(lineOneInfo.body().jsonPath().getLong("stations[0].id")).isEqualTo(1L),
+      () -> assertThat(lineOneInfo.body().jsonPath().getLong("stations[1].id")).isEqualTo(2L),
+      () -> assertThat(lineOneInfo.body().jsonPath().getString("stations[0].name")).isEqualTo("종합운동장"),
+      () -> assertThat(lineOneInfo.body().jsonPath().getString("stations[1].name")).isEqualTo("잠실새내")
+    );
   }
-
 
   @DisplayName("지하철 노선을 수정한다.")
   @Test
@@ -257,11 +264,13 @@ public class LineAcceptanceTest {
       .extract();
 
     //then
-    assertThat(createStation1Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    assertThat(createStation2Response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertAll(
+      "지하철 및 노선 생성",
+      () -> assertThat(createStation1Response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+      () -> assertThat(createStation2Response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+      () -> assertThat(createLineResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+    );
+
     assertThat(lineDeleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
   }
-
 }
