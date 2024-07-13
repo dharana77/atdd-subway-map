@@ -6,7 +6,7 @@ public class LineModifyRequest {
 
   String color;
 
-  public LineModifyRequest(){
+  public LineModifyRequest() {
   }
 
   public LineModifyRequest(String name, String color) {

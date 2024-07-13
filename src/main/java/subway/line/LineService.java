@@ -22,24 +22,24 @@ public class LineService {
   }
 
   @Transactional
-  public Line createLine(LineCreateRequest lineCreateRequest){
+  public Line createLine(LineCreateRequest lineCreateRequest) {
     Station upStation = stationRepository.findById(lineCreateRequest.getUpStationId()).orElseThrow(RuntimeException::new);
     Station downStation = stationRepository.findById(lineCreateRequest.getDownStationId()).orElseThrow(RuntimeException::new);
     return lineRepository.save(lineCreateRequest.toLine(upStation, downStation));
   }
 
-  public List<LineResponse> getLines(){
+  public List<LineResponse> getLines() {
     return lineRepository.findAllJoin().stream()
             .map(LineResponse::from)
             .collect(Collectors.toList());
   }
 
-  public LineResponse getLine(Long id){
+  public LineResponse getLine(Long id) {
     return LineResponse.from(lineRepository.findById(id).orElseThrow(RuntimeException::new));
   }
 
   @Transactional
-  public LineResponse modifyLine(Long id, LineModifyRequest lineModifyRequest){
+  public LineResponse modifyLine(Long id, LineModifyRequest lineModifyRequest) {
     Line line = lineRepository.findById(id).orElseThrow(RuntimeException::new);
     line.updateName(lineModifyRequest.getName());
     line.updateColor(lineModifyRequest.getColor());

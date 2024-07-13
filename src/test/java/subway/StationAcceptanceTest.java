@@ -59,7 +59,7 @@ public class StationAcceptanceTest {
      */
     @DisplayName("지하철 생성 및 지하철역 목록을 조회한다.")
     @Test
-    void testShowSubwayStations(){
+    void testShowSubwayStations() {
         //given
         StationRequest stationRequest1 = new StationRequest("종합운동장");
         StationRequest stationRequest2 = new StationRequest("잠실");
@@ -112,7 +112,7 @@ public class StationAcceptanceTest {
      */
     @DisplayName("지하철역 생성 후 지하철역을 삭제한다.")
     @Test
-    public void testDeleteStation(){
+    public void testDeleteStation() {
         //given
         ExtractableResponse<Response> createResponse =
           RestAssured.given().log().all()

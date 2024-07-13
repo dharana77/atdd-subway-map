@@ -40,7 +40,7 @@ public class LineResponse {
     return stations;
   }
 
-  public static LineResponse from(Line line){
+  public static LineResponse from(Line line) {
     return new LineResponse(line.getId(), line.getName(), line.getColor(), List.of(line.getUpStation(), line.getDownStation()));
   }
 }

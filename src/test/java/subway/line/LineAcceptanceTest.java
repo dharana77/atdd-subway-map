@@ -54,7 +54,7 @@ public class LineAcceptanceTest {
 
   @DisplayName("지하철 노선 목록을 조회한다.")
   @Test
-  public void testShowLines(){
+  public void testShowLines() {
     //given
     ExtractableResponse<Response> createStationResponse = RestAssured.given().log().all()
       .body(new StationRequest("종합운동장"))
@@ -136,7 +136,7 @@ public class LineAcceptanceTest {
 
   @DisplayName("지하철 특정 노선의 정보를 조회한다.")
   @Test
-  public void testShowLineInfo(){
+  public void testShowLineInfo() {
 
     //given
     ExtractableResponse<Response> createStationResponse = RestAssured.given().log().all()
@@ -181,7 +181,7 @@ public class LineAcceptanceTest {
 
   @DisplayName("지하철 노선을 수정한다.")
   @Test
-  public void testModifyLine(){
+  public void testModifyLine() {
     //given
     ExtractableResponse<Response> createStation1Response = RestAssured.given().log().all()
       .body(new StationRequest("종합운동장"))
@@ -225,7 +225,7 @@ public class LineAcceptanceTest {
 
   @DisplayName("지하철 노선을 삭제한다.")
   @Test
-  public void testDeleteLine(){
+  public void testDeleteLine() {
       //given
     ExtractableResponse<Response> createStation1Response = RestAssured.given().log().all()
       .body(new StationRequest("종합운동장"))
