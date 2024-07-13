@@ -2,9 +2,9 @@ package subway.line;
 
 
 public class LineModifyRequest {
-  String name;
+  private String name;
 
-  String color;
+  private String color;
 
   public LineModifyRequest() {
   }
