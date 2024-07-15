@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import subway.StationRequest;
+import subway.lineSection.LineSectionAppendRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -203,8 +204,21 @@ public class LineAcceptanceTest {
   @DisplayName("지하철 노선 구간을 등록한다.")
   @Test
   public void testAppendSubwayLineSection(){
+    //given
+    지하철_역을_생성("종합운동장");
+    지하철_역을_생성("잠실새내");
+    지하철_노선을_생성("2호선", "green", 1L, 2L, 10);
 
-    assertThat(true);
+    //when
+    ExtractableResponse lineSectionAppendResponse = RestAssured.given().log().all()
+      .body(new LineSectionAppendRequest(1L, 2L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines/1/sections")
+      .then().log().all()
+      .extract();
+
+    //then
+    assertThat(lineSectionAppendResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
   }
 
   /**
