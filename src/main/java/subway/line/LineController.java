@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import subway.line.dto.LineCreateRequest;
 import subway.line.dto.LineModifyRequest;
 import subway.line.dto.LineResponse;
+import subway.line.dto.LineSectionAppendRequest;
 
 import java.net.URI;
 import java.util.List;
@@ -51,5 +52,11 @@ public class LineController {
   public ResponseEntity<Void> deleteLine(@PathVariable("id") Long id) {
     lineService.deleteLine(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/{id}/sections")
+  public ResponseEntity<Void> appendLineSection(@PathVariable("id") Long id, @RequestBody LineSectionAppendRequest lineSectionAppendRequest) {
+    lineService.appendLineSection(id, lineSectionAppendRequest);
+    return ResponseEntity.created(URI.create("/lines/"+ id + "/sections")).build();
   }
 }

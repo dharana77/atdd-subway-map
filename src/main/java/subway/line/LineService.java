@@ -8,8 +8,10 @@ import subway.exceptions.SubwayException;
 import subway.line.dto.LineCreateRequest;
 import subway.line.dto.LineModifyRequest;
 import subway.line.dto.LineResponse;
+import subway.line.dto.LineSectionAppendRequest;
 import subway.line.dto.StationsAtLine;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,9 +25,12 @@ public class LineService {
 
   private final StationRepository stationRepository;
 
-  public LineService(LineRepository lineRepository, StationRepository stationRepository) {
+  private final LineSectionRepository lineSectionRepository;
+
+  public LineService(LineRepository lineRepository, StationRepository stationRepository, LineSectionRepository lineSectionRepository) {
     this.lineRepository = lineRepository;
     this.stationRepository = stationRepository;
+    this.lineSectionRepository = lineSectionRepository;
   }
 
   @Transactional
@@ -67,4 +72,26 @@ public class LineService {
   private Line getLineById(Long id) {
     return lineRepository.findById(id).orElseThrow(()-> new SubwayException(NOT_FOUND));
   }
+
+  @Transactional
+  public void appendLineSection(Long id, LineSectionAppendRequest lineSectionAppendRequest) {
+    Line line = getLineById(id);
+
+    LineSection finalLineSection =
+      lineSectionRepository
+        .findAllByLineId(id)
+        .stream()
+        .max(Comparator.comparingInt(item -> item.index.intValue()))
+        .orElseThrow(() -> new SubwayException(NOT_FOUND));
+
+    lineSectionRepository.save(
+      new LineSection(
+        null,
+        line,
+        finalLineSection.getIndex(),
+        stationRepository.findById(lineSectionAppendRequest.getUpStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
+        stationRepository.findById(lineSectionAppendRequest.getDownStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
+        lineSectionAppendRequest.getDistance()));
+  }
+
 }
