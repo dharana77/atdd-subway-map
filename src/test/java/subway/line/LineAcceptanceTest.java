@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import subway.StationRequest;
-import subway.lineSection.LineSectionAppendRequest;
+import subway.line.dto.LineCreateRequest;
+import subway.line.dto.LineModifyRequest;
+import subway.line.dto.LineSectionAppendRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

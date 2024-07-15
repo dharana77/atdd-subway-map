@@ -1,4 +1,4 @@
-package subway.lineSection;
+package subway.line.dto;
 
 public class LineSectionAppendRequest {
 

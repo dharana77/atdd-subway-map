@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import subway.line.dto.LineCreateRequest;
+import subway.line.dto.LineModifyRequest;
+import subway.line.dto.LineResponse;
 
 import java.net.URI;
 import java.util.List;
