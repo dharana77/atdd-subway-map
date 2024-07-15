@@ -191,4 +191,34 @@ public class LineAcceptanceTest {
       .then().log().all()
       .extract();
   }
+
+
+  @DisplayName("지하철 노선 구간을 등록한다.")
+  @Test
+  public void testAppendSubwayLineSection(){
+    //given
+    //지하철 노선을 등록한다.
+    //when
+    //지하철 노선 구간을 등록한다.
+    //then
+    //새로운 요청의 상행역은 마지막 구간의 하행역이어야 한다. -> 오류 처리
+    //새로운 요청의 하행역은 이미 해당 구간역에 등록되어 있는 역이 아니어야 한다. -> 오류 처리
+    //등록된 지하철 노선 구간 결과에 요청이 들어가 있는지 확인한다.
+    assertThat(true);
+  }
+
+  @DisplayName("지하철 노선 구간을 삭제한다.")
+  @Test
+  public void testRemoveSubwayLineSection(){
+    //given
+    //지하철 노선을 등록한다.
+    //지하철 노선 구간을 등록한다.
+    //when
+    //지하철 노선 구간을 삭제한다.
+    //then
+    // 마지막 하행 종점역이 아닌 경우 삭제할 수 없다. -> 오류 처리
+    // 노선 구간이 1개인 경우 삭제할 수 없다. -> 오류 처리
+    // 삭제된 지하철 노선 구간 결과에서 요청 결과가 삭제되었는지 확인한다.
+    assertThat(true);
+  }
 }
