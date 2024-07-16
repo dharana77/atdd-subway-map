@@ -23,10 +23,10 @@ public class LineSection {
   Long index;
 
   @OneToOne
-  Station upStationId;
+  Station upStation;
 
   @OneToOne
-  Station downStationId;
+  Station downStation;
 
   int distance;
 
@@ -37,8 +37,8 @@ public class LineSection {
     this.id = id;
     this.line = line;
     this.index = index;
-    this.upStationId = upStation;
-    this.downStationId = downStation;
+    this.upStation = upStation;
+    this.downStation = downStation;
     this.distance = distance;
   }
 
@@ -55,11 +55,11 @@ public class LineSection {
   }
 
   public Station getUpStationId() {
-    return upStationId;
+    return upStation;
   }
 
   public Station getDownStationId() {
-    return downStationId;
+    return downStation;
   }
 
   public int getDistance() {

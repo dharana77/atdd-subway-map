@@ -95,4 +95,12 @@ public class LineService {
         lineSectionAppendRequest.getDistance()));
   }
 
+  @Transactional
+  public void deleteLineSection(Long lineId, Long stationId) {
+    LineSection lineSection = lineSectionRepository.findAllByLineId(lineId).stream()
+            .filter(item -> item.getDownStationId().getId().equals(stationId))
+            .findFirst()
+            .orElseThrow(() -> new SubwayException(NOT_FOUND));
+    lineSectionRepository.deleteByLineIdAndStationId(stationId);
+  }
 }

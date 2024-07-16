@@ -252,14 +252,14 @@ public class LineAcceptanceTest {
 
     //when
     ExtractableResponse falseLineSectionRemoveResponse = RestAssured.given().log().all()
-      .pathParam("stationId", 2L)
+      .param("stationId", 2L)
       .contentType(MediaType.APPLICATION_JSON_VALUE)
       .when().delete("/lines/1/sections")
       .then().log().all()
       .extract();
 
     ExtractableResponse trueLineSectionRemoveResponse = RestAssured.given().log().all()
-      .pathParam("stationId", 3L)
+      .param("stationId", 3L)
       .contentType(MediaType.APPLICATION_JSON_VALUE)
       .when().delete("/lines/1/sections")
       .then().log().all()
