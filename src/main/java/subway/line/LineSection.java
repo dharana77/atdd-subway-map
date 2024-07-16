@@ -2,6 +2,7 @@ package subway.line;
 
 import subway.Station;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+@Entity
 public class LineSection {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +18,7 @@ public class LineSection {
 
   @ManyToOne
   @JoinColumn(name = "line_id")
-  Line lineId;
+  Line line;
 
   Long index;
 
@@ -31,9 +33,9 @@ public class LineSection {
   public LineSection() {
   }
 
-  public LineSection(Long id, Line lineId, Long index, Station upStation, Station downStation, int distance) {
+  public LineSection(Long id, Line line, Long index, Station upStation, Station downStation, int distance) {
     this.id = id;
-    this.lineId = lineId;
+    this.line = line;
     this.index = index;
     this.upStationId = upStation;
     this.downStationId = downStation;
@@ -44,8 +46,8 @@ public class LineSection {
     return id;
   }
 
-  public Line getLineId() {
-    return lineId;
+  public Line getLine() {
+    return line;
   }
 
   public Long getIndex() {

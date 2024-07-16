@@ -13,6 +13,7 @@ import subway.line.dto.StationsAtLine;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static subway.exceptions.errors.SubwayError.NOT_FOUND;
@@ -77,18 +78,18 @@ public class LineService {
   public void appendLineSection(Long id, LineSectionAppendRequest lineSectionAppendRequest) {
     Line line = getLineById(id);
 
-    LineSection finalLineSection =
+    Optional<LineSection> finalLineSection =
       lineSectionRepository
         .findAllByLineId(id)
         .stream()
-        .max(Comparator.comparingInt(item -> item.index.intValue()))
-        .orElseThrow(() -> new SubwayException(NOT_FOUND));
+        .max(Comparator.comparingInt(item -> item.index.intValue()));
 
+    Long index = finalLineSection.map(item -> item.index).orElse(0L);
     lineSectionRepository.save(
       new LineSection(
         null,
         line,
-        finalLineSection.getIndex(),
+        index + 1,
         stationRepository.findById(lineSectionAppendRequest.getUpStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
         stationRepository.findById(lineSectionAppendRequest.getDownStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
         lineSectionAppendRequest.getDistance()));

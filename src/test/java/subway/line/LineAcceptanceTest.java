@@ -221,9 +221,10 @@ public class LineAcceptanceTest {
 
     //when
     ExtractableResponse lineSectionAppendResponse = RestAssured.given().log().all()
+      .pathParam("id", 1L)
       .body(new LineSectionAppendRequest(1L, 2L, 10))
       .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().post("/lines/1/sections")
+      .when().post("/lines/{id}/sections")
       .then().log().all()
       .extract();
 
