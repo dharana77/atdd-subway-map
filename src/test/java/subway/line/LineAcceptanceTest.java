@@ -217,9 +217,18 @@ public class LineAcceptanceTest {
     //given
     지하철_역을_생성("종합운동장");
     지하철_역을_생성("잠실새내");
+    지하철_역을_생성("잠실");
     지하철_노선을_생성("2호선", "green", 1L, 2L, 10);
 
     //when
+    ExtractableResponse 지하철_노선_구간_등록_잘못된_상행역_요청 = RestAssured.given().log().all()
+      .pathParam("id", 1L)
+      .body(new LineSectionAppendRequest(2L, 1L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines/{id}/sections")
+      .then().log().all()
+      .extract();
+
     ExtractableResponse lineSectionAppendResponse = RestAssured.given().log().all()
       .pathParam("id", 1L)
       .body(new LineSectionAppendRequest(1L, 2L, 10))
@@ -228,8 +237,18 @@ public class LineAcceptanceTest {
       .then().log().all()
       .extract();
 
+    ExtractableResponse 지하철_노선_구간_등록_잘못된_하행역_요청 = RestAssured.given().log().all()
+      .pathParam("id", 1L)
+      .body(new LineSectionAppendRequest(2L, 1L, 10))
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().post("/lines/{id}/sections")
+      .then().log().all()
+      .extract();
+
     //then
+    assertThat(지하철_노선_구간_등록_잘못된_상행역_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     assertThat(lineSectionAppendResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(지하철_노선_구간_등록_잘못된_하행역_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }
 
   /**
