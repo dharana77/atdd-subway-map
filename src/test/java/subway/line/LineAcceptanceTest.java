@@ -270,7 +270,7 @@ public class LineAcceptanceTest {
     지하철_노선_구간을_등록(1L, 2L, 3L, 10);
 
     //when
-    ExtractableResponse falseLineSectionRemoveResponse = RestAssured.given().log().all()
+    ExtractableResponse 잘못된_지하철_노선_구간_역_삭제_요청 = RestAssured.given().log().all()
       .param("stationId", 2L)
       .contentType(MediaType.APPLICATION_JSON_VALUE)
       .when().delete("/lines/1/sections")
@@ -284,8 +284,16 @@ public class LineAcceptanceTest {
       .then().log().all()
       .extract();
 
+    ExtractableResponse 지하철_노선_구간이_1개일_경우_삭제_요청 = RestAssured.given().log().all()
+      .param("stationId", 2L)
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().delete("/lines/1/sections")
+      .then().log().all()
+      .extract();
+
     //then
-    assertThat(falseLineSectionRemoveResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    assertThat(잘못된_지하철_노선_구간_역_삭제_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     assertThat(trueLineSectionRemoveResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    assertThat(지하철_노선_구간이_1개일_경우_삭제_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }
 }
