@@ -1,15 +1,15 @@
 package subway.exceptions;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpClientErrorException;
+import subway.exceptions.errors.SubwayErrorResponse;
+import subway.exceptions.errors.SubwayException;
 
 @ControllerAdvice
 public class SubwayExceptionHandler {
 
-  @ExceptionHandler(HttpClientErrorException.NotFound.class)
-  public ResponseEntity<String> handleStationNotFoundException(HttpClientErrorException.NotFound e) {
-    return ResponseEntity.badRequest().body(e.getMessage());
+  @ExceptionHandler(SubwayException.class)
+  public SubwayErrorResponse handleSubwayException(SubwayException error) {
+    return new SubwayErrorResponse(error.getErrorCode(), error.getMessage());
   }
 }

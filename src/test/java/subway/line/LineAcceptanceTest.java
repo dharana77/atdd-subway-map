@@ -218,32 +218,19 @@ public class LineAcceptanceTest {
     지하철_역을_생성("종합운동장");
     지하철_역을_생성("잠실새내");
     지하철_역을_생성("잠실");
+    지하철_역을_생성("봉은사");
     지하철_노선을_생성("2호선", "green", 1L, 2L, 10);
+    지하철_노선_구간을_등록(1L, 1L, 2L, 10);
 
     //when
-    ExtractableResponse 지하철_노선_구간_등록_잘못된_상행역_요청 = RestAssured.given().log().all()
-      .pathParam("id", 1L)
-      .body(new LineSectionAppendRequest(2L, 1L, 10))
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().post("/lines/{id}/sections")
-      .then().log().all()
-      .extract();
+    ExtractableResponse 지하철_노선_구간_등록_잘못된_상행역_요청 =
+      지하철_노선_구간을_등록(1L, 3L, 4L, 10);
 
-    ExtractableResponse lineSectionAppendResponse = RestAssured.given().log().all()
-      .pathParam("id", 1L)
-      .body(new LineSectionAppendRequest(1L, 2L, 10))
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().post("/lines/{id}/sections")
-      .then().log().all()
-      .extract();
+    ExtractableResponse lineSectionAppendResponse =
+      지하철_노선_구간을_등록(1L, 2L, 3L, 10);
 
-    ExtractableResponse 지하철_노선_구간_등록_잘못된_하행역_요청 = RestAssured.given().log().all()
-      .pathParam("id", 1L)
-      .body(new LineSectionAppendRequest(2L, 1L, 10))
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().post("/lines/{id}/sections")
-      .then().log().all()
-      .extract();
+    ExtractableResponse 지하철_노선_구간_등록_잘못된_하행역_요청 =
+      지하철_노선_구간을_등록(1L, 2L, 4L, 10);
 
     //then
     assertThat(지하철_노선_구간_등록_잘못된_상행역_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());

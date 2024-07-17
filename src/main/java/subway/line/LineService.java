@@ -4,19 +4,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import subway.Station;
 import subway.StationRepository;
-import subway.exceptions.SubwayException;
+import subway.exceptions.errors.SubwayException;
 import subway.line.dto.LineCreateRequest;
 import subway.line.dto.LineModifyRequest;
 import subway.line.dto.LineResponse;
 import subway.line.dto.LineSectionAppendRequest;
 import subway.line.dto.StationsAtLine;
 
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static subway.exceptions.errors.SubwayError.NOT_FOUND;
+import static subway.exceptions.errors.SubwayErrorCode.BAD_REQUEST;
+import static subway.exceptions.errors.SubwayErrorCode.NOT_FOUND;
 
 @Transactional(readOnly = true)
 @Service
@@ -78,13 +79,19 @@ public class LineService {
   public void appendLineSection(Long id, LineSectionAppendRequest lineSectionAppendRequest) {
     Line line = getLineById(id);
 
-    Optional<LineSection> finalLineSection =
-      lineSectionRepository
-        .findAllByLineId(id)
-        .stream()
-        .max(Comparator.comparingInt(item -> item.index.intValue()));
+    List<LineSection> lineSections = getLineSectionsByLineId(id);
+    Long index = lineSections.stream().map(item -> item.index).mapToLong(Long::longValue).max().orElse(1L);
+    Set<Long> lineSectionStations = new HashSet<>();
+    lineSections.stream().forEach(item -> {
+      lineSectionStations.add(item.getDownStationId().getId());
+      lineSectionStations.add(item.getUpStationId().getId());
+    });
 
-    Long index = finalLineSection.map(item -> item.index).orElse(0L);
+    if (!lineSectionAppendRequest.getUpStationId().equals(index) ||
+      lineSectionStations.contains(lineSectionAppendRequest.getDownStationId())) {
+      throw new SubwayException(BAD_REQUEST);
+    }
+
     lineSectionRepository.save(
       new LineSection(
         null,
@@ -102,5 +109,9 @@ public class LineService {
             .findFirst()
             .orElseThrow(() -> new SubwayException(NOT_FOUND));
     lineSectionRepository.deleteByLineIdAndStationId(stationId);
+  }
+
+  private List<LineSection> getLineSectionsByLineId(Long lineId) {
+    return lineSectionRepository.findAllByLineId(lineId);
   }
 }
