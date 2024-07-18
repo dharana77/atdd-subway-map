@@ -80,9 +80,9 @@ public class LineService {
     Line line = getLineById(id);
 
     List<LineSection> lineSections = getLineSectionsByLineId(id);
-    Long index = lineSections.stream().map(item -> item.index).mapToLong(Long::longValue).max().orElse(1L);
+    long index = lineSections.stream().map(item -> item.index).mapToLong(Long::longValue).max().orElse(1L);
     Set<Long> lineSectionStations = new HashSet<>();
-    lineSections.stream().forEach(item -> {
+    lineSections.forEach(item -> {
       lineSectionStations.add(item.getDownStation().getId());
       lineSectionStations.add(item.getUpStation().getId());
     });

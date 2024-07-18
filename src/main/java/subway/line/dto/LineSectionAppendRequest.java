@@ -13,9 +13,11 @@ public class LineSectionAppendRequest {
     this.upStationId = upStationId;
     this.distance = distance;
   }
+
   public Long getUpStationId() {
     return upStationId;
   }
+
   public Long getDownStationId() {
     return downStationId;
   }

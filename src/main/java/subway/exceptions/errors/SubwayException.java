@@ -8,7 +8,7 @@ public class SubwayException extends RuntimeException {
     this.errorCode = errorCode;
   }
 
-  public SubwayErrorCode getErrorCode(){
+  public SubwayErrorCode getErrorCode() {
     return errorCode;
   }
 
