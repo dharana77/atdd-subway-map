@@ -83,8 +83,8 @@ public class LineService {
     Long index = lineSections.stream().map(item -> item.index).mapToLong(Long::longValue).max().orElse(1L);
     Set<Long> lineSectionStations = new HashSet<>();
     lineSections.stream().forEach(item -> {
-      lineSectionStations.add(item.getDownStationId().getId());
-      lineSectionStations.add(item.getUpStationId().getId());
+      lineSectionStations.add(item.getDownStation().getId());
+      lineSectionStations.add(item.getUpStation().getId());
     });
 
     if (!lineSectionAppendRequest.getUpStationId().equals(index) ||
@@ -104,10 +104,15 @@ public class LineService {
 
   @Transactional
   public void deleteLineSection(Long lineId, Long stationId) {
-    LineSection lineSection = lineSectionRepository.findAllByLineId(lineId).stream()
-            .filter(item -> item.getDownStationId().getId().equals(stationId))
-            .findFirst()
-            .orElseThrow(() -> new SubwayException(NOT_FOUND));
+    List<LineSection> lineSectiosn = lineSectionRepository.findAllByLineId(lineId);
+
+    LineSection lastLineSection = lineSectiosn.stream().max((a, b) -> (int) (a.index - b.index))
+      .orElseThrow(() -> new SubwayException(NOT_FOUND));
+
+    if (lastLineSection.getDownStation().getId() != stationId || lineSectiosn.size() <= 1) {
+      throw new SubwayException(BAD_REQUEST);
+    }
+
     lineSectionRepository.deleteByLineIdAndStationId(stationId);
   }
 

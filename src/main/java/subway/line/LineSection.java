@@ -54,11 +54,11 @@ public class LineSection {
     return index;
   }
 
-  public Station getUpStationId() {
+  public Station getUpStation() {
     return upStation;
   }
 
-  public Station getDownStationId() {
+  public Station getDownStation() {
     return downStation;
   }
 
