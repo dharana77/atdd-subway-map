@@ -1,12 +1,10 @@
 package subway.exceptions.errors;
 
-import lombok.Getter;
-import org.springframework.http.HttpStatus;
-
 public class SubwayException extends RuntimeException {
   private final SubwayErrorCode errorCode;
 
   public SubwayException(SubwayErrorCode errorCode) {
+    super(errorCode.getMessage());
     this.errorCode = errorCode;
   }
 

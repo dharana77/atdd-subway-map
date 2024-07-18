@@ -1,17 +1,24 @@
 package subway.exceptions.errors;
 
-import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-@Getter
 public class SubwayErrorResponse {
-  private SubwayErrorCode status;
+  private HttpStatus status;
   private String statusMessage;
 
   public SubwayErrorResponse() {
   }
 
-  public SubwayErrorResponse(SubwayErrorCode errorCode, String message) {
-    this.status = errorCode;
+  public SubwayErrorResponse(HttpStatus status, String message) {
+    this.status = status;
     this.statusMessage = message;
+  }
+
+  public HttpStatus getStatus() {
+    return status;
+  }
+
+  public String getStatusMessage() {
+    return statusMessage;
   }
 }
