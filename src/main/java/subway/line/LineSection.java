@@ -14,21 +14,21 @@ import javax.persistence.OneToOne;
 public class LineSection {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Long id;
+  private Long id;
 
   @ManyToOne
   @JoinColumn(name = "line_id")
-  Line line;
+  private Line line;
 
-  Long index;
+  private Long index;
 
   @OneToOne
-  Station upStation;
+  private Station upStation;
 
   @OneToOne
   Station downStation;
 
-  int distance;
+  private int distance;
 
   public LineSection() {
   }

@@ -80,7 +80,7 @@ public class LineService {
     Line line = getLineById(id);
 
     List<LineSection> lineSections = getLineSectionsByLineId(id);
-    long index = lineSections.stream().map(item -> item.index).mapToLong(Long::longValue).max().orElse(1L);
+    long index = lineSections.stream().map(item -> item.getIndex()).mapToLong(Long::longValue).max().orElse(1L);
     Set<Long> lineSectionStations = new HashSet<>();
     lineSections.forEach(item -> {
       lineSectionStations.add(item.getDownStation().getId());
@@ -104,12 +104,12 @@ public class LineService {
 
   @Transactional
   public void deleteLineSection(Long lineId, Long stationId) {
-    List<LineSection> lineSectiosn = lineSectionRepository.findAllByLineId(lineId);
+    List<LineSection> lineSection = lineSectionRepository.findAllByLineId(lineId);
 
-    LineSection lastLineSection = lineSectiosn.stream().max((a, b) -> (int) (a.index - b.index))
+    LineSection lastLineSection = lineSection.stream().max((a, b) -> (int) (a.getIndex() - b.getIndex()))
       .orElseThrow(() -> new SubwayException(NOT_FOUND));
 
-    if (lastLineSection.getDownStation().getId() != stationId || lineSectiosn.size() <= 1) {
+    if (lastLineSection.getDownStation().getId() != stationId || lineSection.size() <= 1) {
       throw new SubwayException(BAD_REQUEST);
     }
 

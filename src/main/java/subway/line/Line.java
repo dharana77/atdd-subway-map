@@ -1,6 +1,5 @@
 package subway.line;
 
-import lombok.Builder;
 import subway.Station;
 
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-@Builder
 @Entity
 public class Line {
 
