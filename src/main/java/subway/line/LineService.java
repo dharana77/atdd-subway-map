@@ -78,28 +78,14 @@ public class LineService {
   @Transactional
   public void appendLineSection(Long id, LineSectionAppendRequest lineSectionAppendRequest) {
     Line line = getLineById(id);
-
     List<LineSection> lineSections = getLineSectionsByLineId(id);
     long index = lineSections.stream().map(item -> item.getIndex()).mapToLong(Long::longValue).max().orElse(1L);
-    Set<Long> lineSectionStations = new HashSet<>();
-    lineSections.forEach(item -> {
-      lineSectionStations.add(item.getDownStation().getId());
-      lineSectionStations.add(item.getUpStation().getId());
-    });
-
-    if (!lineSectionAppendRequest.getUpStationId().equals(index) ||
-      lineSectionStations.contains(lineSectionAppendRequest.getDownStationId())) {
+    Set<Long> lineSectionStations = getUniqueStationIds(lineSections);
+    if(isReqUpstationIdEqualsIndex(lineSectionAppendRequest, index) || isReqStationIdExist(lineSectionStations, lineSectionAppendRequest)){
       throw new SubwayException(BAD_REQUEST);
     }
 
-    lineSectionRepository.save(
-      new LineSection(
-        null,
-        line,
-        index + 1,
-        stationRepository.findById(lineSectionAppendRequest.getUpStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
-        stationRepository.findById(lineSectionAppendRequest.getDownStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
-        lineSectionAppendRequest.getDistance()));
+    lineSectionRepository.save(createNewLineSection(line, index, lineSectionAppendRequest));
   }
 
   @Transactional
@@ -118,5 +104,32 @@ public class LineService {
 
   private List<LineSection> getLineSectionsByLineId(Long lineId) {
     return lineSectionRepository.findAllByLineId(lineId);
+  }
+
+
+  private Set<Long> getUniqueStationIds(List<LineSection> lineSections) {
+    Set<Long> lineSectionStations = new HashSet<>();
+    lineSections.forEach(item -> {
+      lineSectionStations.add(item.getUpStation().getId());
+      lineSectionStations.add(item.getDownStation().getId());
+    });
+    return lineSectionStations;
+  }
+
+  private boolean isReqUpstationIdEqualsIndex(LineSectionAppendRequest lineSectionAppendRequest, Long index) {
+    if (!lineSectionAppendRequest.getUpStationId().equals(index)) return true;
+    return false;
+  }
+
+  private boolean isReqStationIdExist(Set lineSectionStations, LineSectionAppendRequest lineSectionAppendRequest) {
+    if(lineSectionStations.contains(lineSectionAppendRequest.getDownStationId())) return true;
+    return false;
+  }
+
+  private LineSection createNewLineSection(Line line, Long index, LineSectionAppendRequest lineSectionAppendRequest) {
+    return new LineSection(null, line, index + 1,
+      stationRepository.findById(lineSectionAppendRequest.getUpStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
+      stationRepository.findById(lineSectionAppendRequest.getDownStationId()).orElseThrow(() -> new SubwayException(NOT_FOUND)),
+      lineSectionAppendRequest.getDistance());
   }
 }
