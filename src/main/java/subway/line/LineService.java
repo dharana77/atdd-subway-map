@@ -81,7 +81,7 @@ public class LineService {
     List<LineSection> lineSections = getLineSectionsByLineId(id);
     long index = lineSections.stream().map(item -> item.getIndex()).mapToLong(Long::longValue).max().orElse(1L);
     Set<Long> lineSectionStations = getUniqueStationIds(lineSections);
-    if(isReqUpstationIdEqualsIndex(lineSectionAppendRequest, index) || isReqStationIdExist(lineSectionStations, lineSectionAppendRequest)){
+    if(isReqUpstationIdNotEqualsIndex(lineSectionAppendRequest, index) || isReqStationIdExist(lineSectionStations, lineSectionAppendRequest)){
       throw new SubwayException(BAD_REQUEST);
     }
 
@@ -116,7 +116,7 @@ public class LineService {
     return lineSectionStations;
   }
 
-  private boolean isReqUpstationIdEqualsIndex(LineSectionAppendRequest lineSectionAppendRequest, Long index) {
+  private boolean isReqUpstationIdNotEqualsIndex(LineSectionAppendRequest lineSectionAppendRequest, Long index) {
     if (!lineSectionAppendRequest.getUpStationId().equals(index)) return true;
     return false;
   }
