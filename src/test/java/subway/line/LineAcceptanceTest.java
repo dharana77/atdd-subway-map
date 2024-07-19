@@ -24,7 +24,7 @@ public class LineAcceptanceTest {
 
   @DisplayName("지하철의 새로운 노선을 추가한다.")
   @Test
-  public void testCreateLine(){
+  public void testCreateLine() {
     //도메인 제약 테스트를 추가하기 위해 노선의 조건에서 색상이 중복되지 않고 거리가 100이하여야 한다고 가정한다
 
     //given 역을 생성하고
@@ -213,29 +213,33 @@ public class LineAcceptanceTest {
    */
   @DisplayName("지하철 노선 구간을 등록한다.")
   @Test
-  public void testAppendSubwayLineSection(){
+  public void testAppendSubwayLineSection() {
+    long 종합운동장역_아이디 = 1L;
+    long 잠실새내역_아이디 = 2L;
+    long 잠실역_아이디 = 3L;
+    long 봉은사_아이디 = 4L;
+    long 이호선_노선_아이디 = 1L;
+
     //given
     지하철_역을_생성("종합운동장");
     지하철_역을_생성("잠실새내");
     지하철_역을_생성("잠실");
     지하철_역을_생성("봉은사");
-    지하철_노선을_생성("2호선", "green", 1L, 2L, 10);
-    지하철_노선_구간을_등록(1L, 1L, 2L, 10);
+    지하철_노선을_생성("2호선", "green", 종합운동장역_아이디, 잠실새내역_아이디, 10);
+    지하철_노선_구간을_등록(1L, 종합운동장역_아이디, 잠실새내역_아이디, 10);
 
     //when
-    ExtractableResponse 지하철_노선_구간_등록_잘못된_상행역_요청 =
-      지하철_노선_구간을_등록(1L, 3L, 4L, 10);
-
-    ExtractableResponse lineSectionAppendResponse =
-      지하철_노선_구간을_등록(1L, 2L, 3L, 10);
-
-    ExtractableResponse 지하철_노선_구간_등록_잘못된_하행역_요청 =
-      지하철_노선_구간을_등록(1L, 2L, 4L, 10);
+    ExtractableResponse 지하철_노선_구간_마지막_하행_역이_요청의_상행_역이_아닌_요청 =
+      지하철_노선_구간을_등록(이호선_노선_아이디, 잠실역_아이디, 봉은사_아이디, 10);
+    ExtractableResponse 지하철_노선_구간_마지막_하행_역이_요청의_상행_역인_요청=
+      지하철_노선_구간을_등록(이호선_노선_아이디, 잠실새내역_아이디, 잠실역_아이디, 10);
+    ExtractableResponse 지하철_노선_구간_등록_노선에_이미_존재_하는_역을_하행_역으로_요청 =
+      지하철_노선_구간을_등록(이호선_노선_아이디, 잠실역_아이디, 종합운동장역_아이디, 10);
 
     //then
-    assertThat(지하철_노선_구간_등록_잘못된_상행역_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    assertThat(lineSectionAppendResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    assertThat(지하철_노선_구간_등록_잘못된_하행역_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    assertThat(지하철_노선_구간_마지막_하행_역이_요청의_상행_역이_아닌_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    assertThat(지하철_노선_구간_마지막_하행_역이_요청의_상행_역인_요청.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    assertThat(지하철_노선_구간_등록_노선에_이미_존재_하는_역을_하행_역으로_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }
 
   /**
@@ -247,40 +251,36 @@ public class LineAcceptanceTest {
    */
   @DisplayName("지하철 노선 구간을 삭제한다.")
   @Test
-  public void testRemoveSubwayLineSection(){
+  public void testRemoveSubwayLineSection() {
     //given
+    long 종합운동장역_아이디 = 1L;
+    long 잠실새내역_아이디 = 2L;
+    long 잠실역_아이디 = 3L;
+    long 이호선_아이디 = 1L;
+
     지하철_역을_생성("종합운동장");
     지하철_역을_생성("잠실새내");
     지하철_역을_생성("잠실");
-    지하철_노선을_생성("2호선", "green", 1L, 2L, 10);
-    지하철_노선_구간을_등록(1L, 1L, 2L, 10);
-    지하철_노선_구간을_등록(1L, 2L, 3L, 10);
+    지하철_노선을_생성("2호선", "green", 종합운동장역_아이디, 잠실새내역_아이디, 10);
+    지하철_노선_구간을_등록(이호선_아이디, 종합운동장역_아이디, 잠실새내역_아이디, 10);
+    지하철_노선_구간을_등록(이호선_아이디, 잠실새내역_아이디, 잠실역_아이디, 10);
 
     //when
-    ExtractableResponse 잘못된_지하철_노선_구간_역_삭제_요청 = RestAssured.given().log().all()
-      .param("stationId", 2L)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().delete("/lines/1/sections")
-      .then().log().all()
-      .extract();
-
-    ExtractableResponse trueLineSectionRemoveResponse = RestAssured.given().log().all()
-      .param("stationId", 3L)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().delete("/lines/1/sections")
-      .then().log().all()
-      .extract();
-
-    ExtractableResponse 지하철_노선_구간이_1개일_경우_삭제_요청 = RestAssured.given().log().all()
-      .param("stationId", 2L)
-      .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().delete("/lines/1/sections")
-      .then().log().all()
-      .extract();
-
+    ExtractableResponse 노선의_마지막_하행_역이_삭제_요청의_역이_아닌_삭제_요청 = 지하철_노선_구간_삭제_요청(잠실새내역_아이디);
+    ExtractableResponse 노선의_마지막_하행_역이_삭제_요청_역인_삭제_요청 = 지하철_노선_구간_삭제_요청(잠실역_아이디);
+    ExtractableResponse 지하철_노선_구간이_1개일_경우_삭제_요청 = 지하철_노선_구간_삭제_요청(잠실새내역_아이디);
     //then
-    assertThat(잘못된_지하철_노선_구간_역_삭제_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    assertThat(trueLineSectionRemoveResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    assertThat(노선의_마지막_하행_역이_삭제_요청의_역이_아닌_삭제_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    assertThat(노선의_마지막_하행_역이_삭제_요청_역인_삭제_요청.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     assertThat(지하철_노선_구간이_1개일_경우_삭제_요청.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+  }
+
+  private ExtractableResponse 지하철_노선_구간_삭제_요청(Long stationId) {
+    return RestAssured.given().log().all()
+      .param("stationId", stationId)
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .when().delete("/lines/1/sections")
+      .then().log().all()
+      .extract();
   }
 }
