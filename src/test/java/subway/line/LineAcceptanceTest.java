@@ -199,7 +199,7 @@ public class LineAcceptanceTest {
     return RestAssured.given().log().all()
       .body(new LineSectionAppendRequest(upStationId, downStationId, distance))
       .contentType(MediaType.APPLICATION_JSON_VALUE)
-      .when().post("/lines/%d/sections".formatted(lineId))
+      .when().post(String.format("/lines/%d/sections", lineId))
       .then().log().all()
       .extract();
   }
